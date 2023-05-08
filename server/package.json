@@ -1,0 +1,19 @@
+{
+  "name": "ls",
+  "version": "0.0.0",
+  "description": "example node api server",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "docker build": "docker build . -t torah/demo-express-backend",
+    "docker serve": "docker run -it -p 8888:8888 --name test-express demo-express-backend"
+  },
+  "author": "toglander@1904labs.com",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "mssql": "^9.1.1",
+    "pg": "^8.10.0"
+  }
+}
