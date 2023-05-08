@@ -1,0 +1,78 @@
+version: "3.9"
+# Note that env vars are set in .env file
+services:
+  client:
+    build: ./client
+    ports:
+      - "${CLIENT_PORT_EXTERNAL}:${CLIENT_PORT_INTERNAL}"
+    volumes: # bind-mount the client directory to the container at /usr/src/app
+      - ./client:/usr/src/app
+      - /usr/src/app/node_modules
+    networks:
+      - sample-node-api-frontend
+  server:
+    build: ./server
+    environment:
+      - PGUSER=${POSTGRES_USER}
+      - PGHOST=db
+      - PGPASSWORD=${POSTGRES_PASSWORD}
+      - PGDATABASE=${POSTGRES_DB}
+      - PGPORT=${POSTGRES_PORT_INTERNAL}
+      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      - MSSQL_DB_NAME=${MSSQL_DB_NAME}
+      - MSSQL_USER=${MSSQL_USER}
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - "${SERVER_PORT_EXTERNAL}:${SERVER_PORT_INTERNAL}"
+    networks:
+      - sample-node-api-frontend
+      - sample-node-api-backend
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: postgres:15.2
+    restart: always
+    environment:
+      # - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=${POSTGRES_DB}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 5s
+      retries: 10
+    ports:
+      - "${POSTGRES_PORT_EXTERNAL}:${POSTGRES_PORT_INTERNAL}"
+    networks:
+      - sample-node-api-backend
+
+networks:
+    sample-node-api-frontend:
+    sample-node-api-backend:
+  # db: # This has been commented out because I was not able to autenticate from the server
+  #   image: mcr.microsoft.com/mssql/server:2022-latest
+  #   environment:
+  #     - ACCEPT_EULA=Y
+  #     - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+  #     - MSSQL_DB_NAME=${MSSQL_DB_NAME}
+  #     - MSSQL_DB_USER=${MSSQL_USER}
+  #     - MSSQL_PID=${MSSQL_PID}
+  #   user: root
+  #   command:
+  #   - "bash"
+  #   - "-c"
+  #   - |
+  #     apt install -y systemctl
+  #     /opt/mssql/bin/mssql-conf set sqlagent.enabled true
+  #     systemctl restart mssql-server.service
+  #     /opt/mssql/bin/sqlservr
+  #     /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U SA -P "${MSSQL_SA_PASSWORD}" -Q "CREATE DATABASE ${MSSQL_DB_NAME}"
+  #     /opt/mssql-tools/bin/sqlcmd -S localhost,1433 -U SA -P "${MSSQL_SA_PASSWORD}" -Q "CREATE LOGIN ${MSSQL_USER} WITH PASSWORD = '${MSSQL_SA_PASSWORD}'"
+  #     systemctl restart mssql-server
+
+  #   ports:
+  #     - "${DB_PORT_EXTERNAL}:${DB_PORT_INTERNAL}"
+  #   networks:
+  #     - sample-node-api-backend
