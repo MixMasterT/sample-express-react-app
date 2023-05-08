@@ -15,7 +15,12 @@ async function executeQuery(query) {
   return res;
 }
 
+async function getDbClient() {
+  return await pool.connect();
+}
+
 module.exports = {
+  getDbClient,
   pool,
   queryForNow,
   executeQuery,
