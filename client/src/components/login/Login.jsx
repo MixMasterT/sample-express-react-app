@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   useQueryClient,
-  useQuery,
   useMutation,
 } from '@tanstack/react-query';
 
@@ -13,20 +12,17 @@ import UserIcon from '../UserIcon';
 export default function Login() {
   const [logoutDialogIsOpen, setLogoutDialogIsOpen] = useState(false);
   const queryClient = useQueryClient();
+  function setUser({ user, token }) {
+    queryClient.setQueryData(['user'], { ...user, token });
+  }
   const loginMutation = useMutation({
     mutationFn: loginUser,
-    onSuccess: ({ user, token }) => {
-      console.log('onSuccess ran after loginMutation succeeded: ', user);
-      queryClient.setQueryData(['user'], { ...user, token });
-    },
+    onSuccess: setUser,
     mutationKey: ['user'],
   });
   const registerMutation = useMutation({
     mutationFn: registerUser,
-    onSuccess: ({ user, token }) => {
-      console.log('onSuccess ran after registerMutation succeeded: ', user);
-      queryClient.setQueryData(['user'], { ...user, token });
-    },
+    onSuccess: setUser,
     mutationKey: ['user'],
   });
   const user = queryClient.getQueryData(['user']);
@@ -45,7 +41,9 @@ export default function Login() {
         className={userButtonClasses}
       >
         <UserIcon />
-        <span className="text-gray-900 dark:text-gray-50 text-sm">User Name</span>
+        <span className="text-gray-900 dark:text-gray-50 text-sm">
+          {user?.email || '???'}
+        </span>
       </button>
       { !user && (
         <LoginForm
@@ -56,7 +54,7 @@ export default function Login() {
             if (email && password) {
               loginMutation.mutate(credentials);
             } else {
-              console.warn('login was called but email or password was empty');
+              alert('email and password are required in order to login!');
             }
           }}
           register={(credentials) => {
@@ -69,7 +67,7 @@ export default function Login() {
         <LogoutForm
           isOpen={logoutDialogIsOpen}
           setIsOpen={setLogoutDialogIsOpen}
-          logout={() => { console.log('logout was called...')}}
+          logout={() => { queryClient.setQueryData(['user'], null);}}
         />
       )}
     </>
