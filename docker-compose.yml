@@ -3,6 +3,9 @@ version: "3.9"
 services:
   client:
     build: ./client
+    environment:
+      - NODE_ENV:${NODE_ENV} # must be "development" for react-query devtools to work
+      - VITE_SERVER_BASE_URL:server:${SERVER_PORT_INTERNAL}
     ports:
       - "${CLIENT_PORT_EXTERNAL}:${CLIENT_PORT_INTERNAL}"
     volumes: # bind-mount the client directory to the container at /usr/src/app
@@ -18,9 +21,11 @@ services:
       - PGPASSWORD=${POSTGRES_PASSWORD}
       - PGDATABASE=${POSTGRES_DB}
       - PGPORT=${POSTGRES_PORT_INTERNAL}
-      - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
-      - MSSQL_DB_NAME=${MSSQL_DB_NAME}
-      - MSSQL_USER=${MSSQL_USER}
+      - JWT_SECRET=${SERVER_JWT_SECRET}
+      # - MSSQL_SA_PASSWORD=${MSSQL_SA_PASSWORD}
+      # - MSSQL_DB_NAME=${MSSQL_DB_NAME}
+      # - MSSQL_USER=${MSSQL_USER}
+
     volumes:
       - ./server:/usr/src/app
     ports:
