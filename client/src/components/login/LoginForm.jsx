@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 
 import petsLogo from '../../assets/pets-logo.jpeg';
-import CloseIcon from '../CloseIcon';
 
 export default function LoginForm({ login, register, close }) {
   const [isRegister, setIsRegister] = useState(false);
@@ -12,12 +11,6 @@ export default function LoginForm({ login, register, close }) {
     <div className="fixed inset-0 overflow-y-auto flex-col items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="flex items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
           <div className="m-w-[300px] bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
-            <button
-              className='float-right p-2'
-              onClick={() => close()}
-            >
-              <CloseIcon className="float-right" />
-            </button>
             <div className="flex items-center p-6 text-2xl font-semibold text-gray-900 dark:text-white">
               <img className="w-8 h-8 mr-2" src={petsLogo} alt="logo" />
               Pets (Sample App)    
@@ -55,7 +48,6 @@ export default function LoginForm({ login, register, close }) {
                 <button
                   type="button"
                   onClick={() => {
-                    console.log(`user clicked ${isRegister ? 'register' : 'login'}`);
                     if (isRegister) register({ email, password });
                     else login({ email, password });
                     

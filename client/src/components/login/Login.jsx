@@ -3,6 +3,7 @@ import {
   useQueryClient,
   useMutation,
 } from '@tanstack/react-query';
+import { useNavigate } from 'react-router-dom';
 
 import LogoutForm from './LogoutForm';
 import LoginForm from './LoginForm';
@@ -10,10 +11,14 @@ import { loginUser, registerUser } from '../../api';
 import UserIcon from '../UserIcon';
 
 export default function Login() {
+  const navigate = useNavigate();
   const [logoutDialogIsOpen, setLogoutDialogIsOpen] = useState(false);
   const queryClient = useQueryClient();
   function setUser({ user, token }) {
     queryClient.setQueryData(['user'], { ...user, token });
+    localStorage.setItem('token', token);
+    queryClient.fetchQuery(['pets']);
+    navigate('/pets');
   }
   const loginMutation = useMutation({
     mutationFn: loginUser,
@@ -26,7 +31,6 @@ export default function Login() {
     mutationKey: ['user'],
   });
   const user = queryClient.getQueryData(['user']);
-  console.log('user:  ', user);
   const userButtonClasses = 'min-h-full flex flex-col items-center justify-center' +
     ' py-2 px-6 lg:px-8 bg-gray-200 hover:bg-gray-300 rounded' +
     ' dark:bg-gray-700 dark:hover:bg-gray-600';
@@ -35,7 +39,6 @@ export default function Login() {
       <button
         type="button"
         onClick={() => {
-          console.log('user clicked');
           setLogoutDialogIsOpen(true);
         }}
         className={userButtonClasses}
@@ -49,7 +52,6 @@ export default function Login() {
         <LoginForm
           close={() => setLogoutDialogIsOpen(false)}
           login={(credentials) => {
-            console.log('login was called... widht credentials:  ', credentials);
             const { email, password } = credentials;
             if (email && password) {
               loginMutation.mutate(credentials);
@@ -58,7 +60,6 @@ export default function Login() {
             }
           }}
           register={(credentials) => {
-            console.log('register was called... widht credentials:  ', credentials);
             registerMutation.mutate(credentials);
           }}
         />
@@ -67,7 +68,10 @@ export default function Login() {
         <LogoutForm
           isOpen={logoutDialogIsOpen}
           setIsOpen={setLogoutDialogIsOpen}
-          logout={() => { queryClient.setQueryData(['user'], null);}}
+          logout={() => {
+            queryClient.setQueryData(['user'], null);
+            localStorage.removeItem('token');
+          }}
         />
       )}
     </>

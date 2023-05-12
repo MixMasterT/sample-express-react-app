@@ -5,10 +5,12 @@ async function authenticatedGet(url) {
     const res = await fetch(url, {
       method: 'GET',
       headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}`
+        Authorization: `Bearer ${localStorage.getItem('token')}`,
+        'Content-Type': 'application/json',
       },
     });
-    return res;
+    const json = await res.json();
+    return json;
   } catch (error) {
     console.error(`error inside authenticatedGet call to ${url}: `, error);
   }
@@ -30,7 +32,6 @@ async function authenticatedPost(url, body) {
 }
 
 async function post(url, body) {
-  console.log('post called with url: ', url, ' and body: ', body);
   try {
     const res = await fetch(url, {
       method: 'POST',
@@ -48,10 +49,8 @@ async function post(url, body) {
 }
 
 export async function registerUser({ email, password }) {
-  console.log('registerUser called with email: ', email, ' and password: ', password);
   try {
     const data = await post(`${serverUrl}/public/register`, { email, password });
-    console.log('data from registerUser: ', data);
     if (data.token) {
       localStorage.setItem('token', data.token);
       return data;
@@ -67,10 +66,8 @@ export async function registerUser({ email, password }) {
 }
 
 export async function loginUser({ email, password }) {
-  console.log('loginUser called with email: ', email, ' and password: ', password);
   try {
     const data = await post(`${serverUrl}/public/login`, { email, password });
-    console.log('data from loginUser: ', data);
     if (data.token) {
       localStorage.setItem('token', data.token);
       return data;
@@ -87,4 +84,9 @@ export async function loginUser({ email, password }) {
 
 export function pingServer() {
   return authenticatedGet(`${serverUrl}/ping`);
+}
+
+export function getAllPets() {
+  const res = authenticatedGet(`${serverUrl}/protected/all-pets`);
+  return res;
 }

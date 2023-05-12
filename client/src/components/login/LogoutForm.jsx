@@ -27,7 +27,6 @@ export default function LogoutForm({ logout, setIsOpen }) {
             <button
               type="button"
               onClick={() => {
-                console.log('user clicked logout');
                 logout?.();
                 setIsOpen(false);
               }}
