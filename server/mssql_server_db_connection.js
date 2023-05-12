@@ -1,4 +1,6 @@
+/* NOTE: This file is not being used in this sample app. It is here for reference only. */
 const sql = require('mssql');
+
 const sqlConfig = {
   user: process.env.MSSQL_USER,
   password: process.env.MSSQL_SA_PASSWORD,
@@ -16,8 +18,6 @@ const sqlConfig = {
 }
 
 async function connectToDB() {
-  console.log('sqlConfig: ', JSON.stringify(sqlConfig, null, 2));
-
  try {
   // make sure that any items are correctly URL encoded in the connection string
   await sql.connect(sqlConfig)

@@ -6,7 +6,6 @@ const pool = new Pool();
 
 async function queryForNow() {
   const res = await pool.query('SELECT NOW()');
-  console.log('inside queyrForNow func res: ', res);
   return res;
 }
 
@@ -42,7 +41,6 @@ async function insertUser(user) {
   try {
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
-      console.log('user already exists: ', existingUser);
       if (verifyPassword(password, existingUser)) {
         const { id, email } = existingUser;
         return { id, email };

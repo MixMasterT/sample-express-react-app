@@ -13,25 +13,20 @@ router.get('/test-public', (req, res) => {
 router.post(
   '/login',
   (req, res, next) => {
-    console.log('inside login route, req.body: ', req.body);
     passport.authenticate('local', { session: false }, (err, user, info) => {
-      console.log('inside authenticate callback');
       if (err) {
-        console.log('inside authenticate callback err: ', err);
         return next(err);
       }
       if (!user) {
-        console.log('inside authenticate callback !user: ', !user);
         return res.status(401).json({ message: info.message });
       }
       req.login(user, { session: false }, (err) => {
-        console.log('inside req.login callback');
         if (err) {
-          console.log('inside req.login callback err: ', err);
           return next(err);
         }
-        const token = jwt.sign(user, process.env.JWT_SECRET);
-        return res.json({ user, token });
+        const frontendUser = { email: user.email };
+        const token = jwt.sign(frontendUser, process.env.JWT_SECRET);
+        return res.json({ user: frontendUser, token });
       });
     })(req, res, next);
   }
@@ -45,7 +40,6 @@ router.post(
       return res.status(400).send({ message: 'email and password are required'});
     }
     insertUser({ email, password }).then((user) => {
-      console.log('user inserted: ', user)
       if (!user) {
         return res.status(400).send({ message: 'user signup failed'});
       }

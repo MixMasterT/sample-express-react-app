@@ -24,7 +24,7 @@ passport.use(new LocalStrategy(
       return callBack(null, user);
     }).catch((err) => {
       if (err) {
-        console.log('checking password failed: ', err);
+        console.error('checking password failed: ', err);
         return callBack(err);
       }
     });
