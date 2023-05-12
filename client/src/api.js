@@ -15,7 +15,7 @@ async function authenticatedGet(url) {
     console.error(`error inside authenticatedGet call to ${url}: `, error);
   }
 }
-
+// eslint-disable-next-line no-unused-vars
 async function authenticatedPost(url, body) {
   try {
     const res = await fetch(url, {

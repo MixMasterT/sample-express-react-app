@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 
 import petsLogo from '../../assets/pets-logo.jpeg';
 
@@ -83,3 +84,9 @@ export default function LoginForm({ login, register, close }) {
     </div>
   );
 }
+
+LoginForm.propTypes = {
+  login: PropTypes.func.isRequired,
+  register: PropTypes.func.isRequired,
+  close: PropTypes.func.isRequired,
+};

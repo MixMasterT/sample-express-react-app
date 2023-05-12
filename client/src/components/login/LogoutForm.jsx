@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function LogoutForm({ logout, setIsOpen }) {
   return (
@@ -47,3 +48,8 @@ export default function LogoutForm({ logout, setIsOpen }) {
     </div>
   )
 }
+
+LogoutForm.propTypes = {
+  logout: PropTypes.func,
+  setIsOpen: PropTypes.func,
+};

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import { getAllPets } from "../api";
@@ -12,6 +13,14 @@ function PetCard({ pet }) {
     </div>
   );
 }
+
+PetCard.propTypes = {
+  pet: PropTypes.shape({
+    pet_name: PropTypes.string.isRequired,
+    pet_type: PropTypes.string.isRequired,
+    pet_description: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default function Pets() {
   const queryClient = useQueryClient();
