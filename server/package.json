@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "db:migrate": "node -e 'require(\"./db/migrations\").runMigrations()'"
+    "db:migrate": "node -e 'require(\"./db/migrations\").runMigrations()'",
+    "db:seed": "node ./db/seed-db.js"
   },
   "author": "toglander@1904labs.com",
   "license": "ISC",
@@ -20,5 +21,8 @@
     "passport-jwt": "^4.0.1",
     "passport-local": "^1.0.0",
     "pg": "^8.10.0"
+  },
+  "devDependencies": {
+    "@faker-js/faker": "^8.0.0"
   }
 }

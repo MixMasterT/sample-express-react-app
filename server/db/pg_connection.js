@@ -23,10 +23,13 @@ async function getUserByEmail(email) {
 }
 
 async function executeQuery(query) {
-  const res = await pool.query(query);
-  console.log('inside executeQuery func res: ', res);
-
-  return res;
+  try {
+    const res = await pool.query(query);
+    return res;
+  } catch (error) {
+    console.error('error executing query: ', error);
+    throw new Error(`Error executing query: ${error}`);
+  }
 }
 
 async function getDbClient() {
@@ -40,7 +43,6 @@ async function insertUser(user) {
     const existingUser = await getUserByEmail(email);
     if (existingUser) {
       console.log('user already exists: ', existingUser);
-      const { hash } = hashPassword(password, existingUser);
       if (verifyPassword(password, existingUser)) {
         const { id, email } = existingUser;
         return { id, email };
@@ -52,10 +54,9 @@ async function insertUser(user) {
     const res = await pool.query(
       `INSERT INTO users (
         email, password_hash, password_salt
-      ) VALUES ($1, $2, $3) RETURNING id, email`,
+      ) VALUES ($1, $2, $3) RETURNING email`,
       [email, hash, salt.toString()],
     );
-    console.log('inside insertUser func res: ', res);
     return res.rows[0];
   } catch (error) {
     console.error('error inside insertUser func: ', error);
