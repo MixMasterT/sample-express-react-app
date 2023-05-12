@@ -30,7 +30,6 @@ async function seedUsers(numUsers=10) {
       '${user.id}', '${user.email}', '${user.password_hash}', '${user.password_salt}'
     )`).join(', ') + ';'};
   `;
-  console.log('about to insert users with query: ', query);
   try {
     await executeQuery(query);
     console.log(`${users.length} users inserted into DB successfully!`);
@@ -45,28 +44,21 @@ async function seedUsers(numUsers=10) {
 const PET_TYPES = ['dog', 'cat', 'fish', 'bird', 'snake'];
 
 function generateNewPet(users) {
-  console.log('generating a new pet...');
   let petType;
   const rand = Math.random();
-  console.log('rand was: ', rand);
   if (rand < 0.5) {
-    console.log('rand less than 0.5, so petType is: ', PET_TYPES[0]);
     petType = PET_TYPES[0];
   }
   else if (rand > 0.5 && rand <= 0.9) {
-    console.log('rand less than 0.9, so petType is: ', PET_TYPES[1]);
     petType = PET_TYPES[1];
   }
   else if (rand > 0.9 && rand <= 0.94) {
-    console.log('rand less than 0.94, so petType is: ', PET_TYPES[2]);
     petType = PET_TYPES[2];
   }
   else if (rand > 0.94 && rand <= 0.98) {
-    console.log('rand less than 0.98, so petType is: ', PET_TYPES[3]);
     petType = PET_TYPES[3];
   }
   else if (rand > 0.98) {
-    console.log('rand greater than 0.98, so petType is: ', PET_TYPES[4]);
     petType = PET_TYPES[4];
   }
   
@@ -104,7 +96,6 @@ async function seedPets(users, numPets=20) {
       }'
     )`).join(', ') + ';'};
   `;
-  console.log('about to insert pets with query: ', query);
   try {
     await executeQuery(query);
     console.log(`${pets.length} pets inserted into DB successfully!`);

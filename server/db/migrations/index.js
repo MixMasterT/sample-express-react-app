@@ -5,7 +5,6 @@ const { getDbClient } = require('../pg_connection');
 async function runMigrations() {
   const files = await promisify(fs.readdir)('./db/migrations');
   const migrations = files.filter((file) => file.split(".")[1] === "sql");
-  console.log('migrations: ', migrations);
   const migrationSqlStatements = migrations.map((migration) => {
     return fs.readFileSync(`./db/migrations/${migration}`, 'utf8');
   });
@@ -16,7 +15,6 @@ async function runMigrations() {
     console.log('running db migrations...');
     await client.query('BEGIN'); 
     for (let migration of migrationSqlStatements) {
-      console.log('about to run migration: ', migration);
       failedQuery = migration;
       await client.query(migration);
       failedQuery = null;
