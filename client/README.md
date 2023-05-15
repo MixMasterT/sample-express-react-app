@@ -39,3 +39,5 @@ It is designed for development purposes.
 The JWT token gets written directly into local-storage, which is not a best practice.
 
 If better security is desired, moving the token management into a web-worker is recommended.
+
+Also, serving data over https would be much more secure.
